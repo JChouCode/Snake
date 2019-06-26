@@ -46,8 +46,6 @@ while True:
     next_key = win.getch()
     key = key if next_key == -1 else next_key
 
-    check_lose()
-
     new_head = snake[0]
 
     if key == UP:
