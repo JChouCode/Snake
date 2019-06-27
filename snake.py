@@ -24,16 +24,6 @@ def init_screen(stdscr):
     curses.init_pair(2, curses.COLOR_WHITE, curses.COLOR_BLACK)
     return win, apple, sh, sw
 
-# cur = curses.initscr()
-# curses.curs_set(0)
-# curses.noecho()
-# curses.cbreak()
-
-# sh, sw = cur.getmaxyx()
-# win = curses.newwin(sh, sw, 0, 0)
-# win.timeout(100)
-# win.keypad(True)
-
 
 class Key(Enum):
     LEFT = curses.KEY_LEFT
@@ -57,9 +47,6 @@ class Snake(list):
 
     def get_pos(self):
         return self[0]
-
-    # def get_len(self):
-    #     return len(self.snake)
 
     def move(self, k):
         assert type(k) is Key
@@ -128,7 +115,6 @@ def main(stdscr):
         win.addstr(1, sw - 13, "Length: " + str(len(snake)))
         win.addstr(0, sw - 15, "               ")
         win.addstr(0, sw - 13, "Pos: " + pos_str)
-        # win.addstr(sh - 1, sw//2, "App: " + str(apple))
         try:
             win.addch(snake.get_x(), snake.get_y(),
                       '■', curses.color_pair(2))
