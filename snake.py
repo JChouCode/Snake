@@ -61,7 +61,8 @@ class Snake(list):
 
 
 def check_lose(snake, sh, sw):
-    return snake.get_x() in [0, sh] and snake.get_y() in [0, sw] and snake.get_pos() in snake[1:]
+    return (snake.get_x() in [0, sh] and snake.get_y() in [0, sw]
+            and snake.get_pos() in snake[1:])
 
 
 def gen_app(snake, apple, sh, sw):
@@ -85,18 +86,22 @@ def main(stdscr):
 
         next_key = win.getch()
 
-        key = key if next_key == -1 else next_key
-
-        if key == curses.KEY_UP:
-            snake.move(Key.UP)
-        elif key == curses.KEY_DOWN:
-            snake.move(Key.DOWN)
-        elif key == curses.KEY_LEFT:
-            snake.move(Key.LEFT)
-        elif key == curses.KEY_RIGHT:
-            snake.move(Key.RIGHT)
+        if next_key == -1:
+            pass
         elif key == None:
+            key = next_key
+        elif (Key(key) == Key.LEFT and Key(next_key) == Key.RIGHT
+              or Key(key) == Key.RIGHT and Key(next_key) == Key.LEFT
+              or Key(key) == Key.UP and Key(next_key) == Key.DOWN
+              or Key(key) == Key.DOWN and Key(next_key) == Key.UP):
+            pass
+        else:
+            key = next_key
+
+        if key == None:
             continue
+
+        snake.move(Key(key))
 
         if check_lose(snake, sh, sw):
             win.keypad(False)
