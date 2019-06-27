@@ -14,7 +14,10 @@ def init_screen(stdscr):
     win = curses.newwin(sh, sw, 0, 0)
     win.timeout(100)
     win.keypad(True)
-    apple = (sh//2, sw//2)
+    if sw//2 % 2 == 0:
+        apple = (sh//2, sw//2 + 1)
+    else:
+        apple = (sh//2, sw//2)
     curses.start_color()
     curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
     curses.init_pair(2, curses.COLOR_WHITE, curses.COLOR_BLACK)
@@ -64,18 +67,18 @@ class Snake(list):
         elif k == Key.DOWN:
             self.insert(0, (self[0][0] + 1, self[0][1]))
         elif k == Key.LEFT:
-            self.insert(0, (self[0][0], self[0][1] - 1))
+            self.insert(0, (self[0][0], self[0][1] - 2))
         elif k == Key.RIGHT:
-            self.insert(0, (self[0][0], self[0][1] + 1))
+            self.insert(0, (self[0][0], self[0][1] + 2))
 
 
 def check_lose(snake, sh, sw):
-    return snake.get_x in [0, sh] and snake.get_y in [0, sw]
+    return snake.get_x() in [0, sh] and snake.get_y() in [0, sw] and snake.get_pos() in snake[1:]
 
 
 def gen_app(snake, apple, sh, sw):
     temp = snake.get_pos()
-    while temp in snake:
+    while temp[1] % 2 == 0 or temp in snake:
         temp = (random.randint(1, sh - 1), random.randint(1, sw - 1))
     return temp
 
@@ -84,18 +87,13 @@ def main(stdscr):
     win, apple, sh, sw = init_screen(stdscr)
 
     snake = Snake()
-
     win.addch(snake.get_x(), snake.get_y(),
-              curses.ACS_BLOCK, curses.color_pair(2))
+              '■', curses.color_pair(2))
     win.addch(apple[0], apple[1], curses.ACS_DIAMOND, curses.color_pair(1))
 
     key = None
 
     while True:
-        if check_lose(snake, sh, sw):
-            win.keypad(False)
-            curses.endwin()
-            return
 
         next_key = win.getch()
 
@@ -112,6 +110,10 @@ def main(stdscr):
         elif key == None:
             continue
 
+        if check_lose(snake, sh, sw):
+            win.keypad(False)
+            return
+
         if snake.get_pos() == apple:
             apple = gen_app(snake, apple, sh, sw)
             win.addch(apple[0], apple[1], curses.ACS_DIAMOND,
@@ -121,8 +123,11 @@ def main(stdscr):
             tail = snake.pop()
             win.addch(tail[0], tail[1], ' ')
 
-        win.addstr(0, sw//2, "Pos: " + str(snake.get_pos()))
-        win.addstr(sh - 1, sw//2, "App: " + str(apple))
+        pos_str = str(snake.get_pos())
+        win.addstr(1, sw - 13, "Length: " + str(len(snake)))
+        win.addstr(0, sw - 15, "               ")
+        win.addstr(0, sw - 13, "Pos: " + pos_str)
+        # win.addstr(sh - 1, sw//2, "App: " + str(apple))
         win.addch(snake.get_x(), snake.get_y(),
                   '■', curses.color_pair(2))
 
