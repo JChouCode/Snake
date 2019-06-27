@@ -2,6 +2,7 @@ import os
 import sys
 import curses
 import random
+import time
 from enum import Enum
 # from collections import deque
 from curses import wrapper
@@ -128,8 +129,15 @@ def main(stdscr):
         win.addstr(0, sw - 15, "               ")
         win.addstr(0, sw - 13, "Pos: " + pos_str)
         # win.addstr(sh - 1, sw//2, "App: " + str(apple))
-        win.addch(snake.get_x(), snake.get_y(),
-                  '■', curses.color_pair(2))
+        try:
+            win.addch(snake.get_x(), snake.get_y(),
+                      '■', curses.color_pair(2))
+        except curses.error:
+            win.clear()
+            win.addstr(sh//2, sw//2 - 5, "Game Over")
+            win.refresh()
+            time.sleep(1.5)
+            return
 
 
 wrapper(main)
