@@ -1,15 +1,14 @@
 # Curses Snake
 
-Simple terminal snake game using curses.
+Simple terminal snake game using Curses.
 
-## About
+## Run
+```
+$ python3 snake.py
+```
 
-I decided to make snake in python for fun. This was implemented using the curses library.
-
+## Statistics
 Total time spent coding: 2 hours.
 Languages: Python
 Packages: Curses
 
-## Authors
-
-* Jeffrey Chou
