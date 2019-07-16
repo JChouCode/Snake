@@ -2,7 +2,8 @@
 
 Simple terminal snake game using Curses.
 
-## Run
+## How to play
+Run the following command
 ```
 $ python3 snake.py
 ```
